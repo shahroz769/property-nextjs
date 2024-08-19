@@ -11,7 +11,7 @@ const PropertiesPage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {properties.map((property) => (
                             <PropertyCard
-                                key={property.id}
+                                key={property._id}
                                 property={property}
                             />
                         ))}
