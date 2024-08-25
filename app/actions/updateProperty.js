@@ -4,9 +4,8 @@ import Property from "@/models/Property";
 import { getSessionUser } from "@/utils/getSessionUser";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import cloudinary from "@/config/cloudinary";
 
-async function addProperty(formData) {
+async function updateProperty(propertyId, formData) {
     await connectDB();
 
     const sessionUser = await getSessionUser();
@@ -16,9 +15,12 @@ async function addProperty(formData) {
 
     const { userId } = sessionUser;
 
-    const images = formData
-        .getAll("images")
-        .filter((image) => image.name !== "");
+    const existingProperty = await Property.findById(propertyId);
+
+    // Verify ownership
+    if (existingProperty.owner.toString() !== userId) {
+        throw new Error("Current user does not own this property");
+    }
 
     const propertyData = {
         owner: userId,
@@ -47,33 +49,13 @@ async function addProperty(formData) {
         },
     };
 
-    const imageUrls = [];
-
-    for (const imageFile of images) {
-        const imageBuffer = await imageFile.arrayBuffer();
-        const imageArray = Array.from(new Uint8Array(imageBuffer));
-        const imageData = Buffer.from(imageArray);
-
-        //convert to base64
-        const imageBase64 = imageData.toString("base64");
-
-        //Make request to Cloudinary
-        const result = await cloudinary.uploader.upload(
-            `data:image/png;base64,${imageBase64}`,
-            {
-                folder: "property-pulse",
-            }
-        );
-        imageUrls.push(result.secure_url);
-    }
-
-    propertyData.images = imageUrls;
-
-    const newProperty = new Property(propertyData);
-    await newProperty.save();
+    const updatedProperty = await Property.findByIdAndUpdate(
+        propertyId,
+        propertyData
+    );
 
     revalidatePath("/", "layout");
-    redirect(`/properties/${newProperty._id}`);
+    redirect(`/properties/${updatedProperty._id}`);
 }
 
-export default addProperty;
+export default updateProperty;
