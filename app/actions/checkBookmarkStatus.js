@@ -1,23 +1,27 @@
-"use server";
-import connectDB from "@/config/database";
-import User from "@/models/User";
-import { getSessionUser } from "@/utils/getSessionUser";
+'use server';
+
+const { default: connectDB } = require('@/config/database');
+const { default: User } = require('@/models/User');
+const { getSessionUser } = require('@/utils/getSessionUser');
 
 async function checkBookmarkStatus(propertyId) {
-    await connectDB();
+  await connectDB();
 
-    const sessionUser = await getSessionUser();
-    if (!sessionUser || !sessionUser.userId) {
-        throw new Error("User id is required");
-    }
+  const sessionUser = await getSessionUser();
 
-    const { userId } = sessionUser;
+  if (!sessionUser || !sessionUser.userId) {
+    return { error: 'User ID is required' };
+  }
 
-    const user = await User.findById(userId);
+  const { userId } = sessionUser;
 
-    let isBookmarked = user.bookmarks.includes(propertyId);
+  // Find user in database
+  const user = await User.findById(userId);
 
-    return { isBookmarked };
+  // Check if property is bookmarked
+  let isBookmarked = user.bookmarks.includes(propertyId);
+
+  return { isBookmarked };
 }
 
 export default checkBookmarkStatus;

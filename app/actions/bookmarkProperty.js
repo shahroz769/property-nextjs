@@ -1,44 +1,48 @@
-"use server";
-import connectDB from "@/config/database";
-import User from "@/models/User";
-import { getSessionUser } from "@/utils/getSessionUser";
-import { revalidatePath } from "next/cache";
+'use server';
+
+import connectDB from '@/config/database';
+import User from '@/models/User';
+import { getSessionUser } from '@/utils/getSessionUser';
+import { revalidatePath } from 'next/cache';
 
 async function bookmarkProperty(propertyId) {
-    await connectDB();
+  await connectDB();
 
-    const sessionUser = await getSessionUser();
-    if (!sessionUser || !sessionUser.userId) {
-        throw new Error("User id is required");
-    }
+  const sessionUser = await getSessionUser();
 
-    const { userId } = sessionUser;
+  if (!sessionUser || !sessionUser.userId) {
+    return { error: 'User ID is required' };
+  }
 
-    const user = await User.findById(userId);
+  const { userId } = sessionUser;
 
-    let isBookmarked = user.bookmarks.includes(propertyId);
+  // Find user in database
+  const user = await User.findById(userId);
 
-    let message;
+  // Check if property is bookmarked
+  let isBookmarked = user.bookmarks.includes(propertyId);
+  console.log(isBookmarked);
 
-    if (isBookmarked) {
-        //Remove if already bookmarked
-        user.bookmarks.pull(propertyId);
-        message = "Bookmark removed";
-        isBookmarked = false;
-    } else {
-        //Add if not bookmarked
-        user.bookmarks.push(propertyId);
-        message = "Bookmark added";
-        isBookmarked = true;
-    }
+  let message;
 
-    await user.save();
-    revalidatePath("/properties/saved", "page");
+  if (isBookmarked) {
+    // If already bookmarked, remove it
+    user.bookmarks.pull(propertyId);
+    message = 'Bookmark removed successfully';
+    isBookmarked = false;
+  } else {
+    // If not bookmarked, add it
+    user.bookmarks.push(propertyId);
+    message = 'Bookmark added successfully';
+    isBookmarked = true;
+  }
 
-    return {
-        message,
-        isBookmarked,
-    };
+  console.log(message);
+
+  await user.save();
+  revalidatePath('/properties/saved', 'page');
+
+  return { message, isBookmarked };
 }
 
 export default bookmarkProperty;
