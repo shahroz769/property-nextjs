@@ -1,97 +1,110 @@
+import FeaturedPropertyCardPlaceholder from '@/components/FeaturedPropertyCardPlaceholder';
 import Link from 'next/link';
-import Image from 'next/image';
-import {
-  FaBed,
-  FaBath,
-  FaRulerCombined,
-  FaMoneyBill,
-  FaMapMarker,
-} from 'react-icons/fa';
+import { Bed, Bath, Ruler, DollarSign, MapPin } from 'lucide-react';
 
 const FeaturedPropertyCard = ({ property }) => {
-  const getRateDisplay = () => {
-    const { rates } = property;
+    const getRateDisplay = () => {
+        const { rates } = property;
+        if (rates.monthly) {
+            return `$${rates.monthly.toLocaleString()}/mo`;
+        } else if (rates.weekly) {
+            return `$${rates.weekly.toLocaleString()}/wk`;
+        } else if (rates.nightly) {
+            return `$${rates.nightly.toLocaleString()}/night`;
+        }
+    };
 
-    if (rates.monthly) {
-      return `${rates.monthly.toLocaleString()}/mo`;
-    } else if (rates.weekly) {
-      return `${rates.weekly.toLocaleString()}/wk`;
-    } else if (rates.nightly) {
-      return `${rates.nightly.toLocaleString()}/night`;
-    }
-  };
+    // Use Cloudinary image URL with transformations
+    const cloudinaryImage = property.images[0].replace(
+        'upload/',
+        'upload/f_avif,w_484,h_260,c_fill/'
+    );
 
-  return (
-    <div className='bg-white rounded-xl shadow-md relative flex flex-col md:flex-row'>
-      <Image
-        src={property.images[0]}
-        alt=''
-        width={0}
-        height={0}
-        sizes='100vw'
-        className='object-cover rounded-t-xl md:rounded-tr-none md:rounded-l-xl w-full md:w-2/5'
-      />
-      <div className='p-6'>
-        <h3 className='text-xl font-bold'>{property.name}</h3>
-        <div className='text-gray-600 mb-4'>{property.type}</div>
-        <h3 className='absolute top-[10px] left-[10px] bg-white px-4 py-2 rounded-lg text-blue-500 font-bold text-right md:text-center lg:text-right'>
-          ${getRateDisplay()}
-        </h3>
-        <div className='flex justify-center gap-4 text-gray-500 mb-4'>
-          <p>
-            <FaBed className='inline-block mr-2' /> {property.beds}{' '}
-            <span className='md:hidden lg:inline'>Beds</span>
-          </p>
-          <p>
-            <FaBath className='inline-block mr-2' /> {property.baths}{' '}
-            <span className='md:hidden lg:inline'>Baths</span>
-          </p>
-          <p>
-            <FaRulerCombined className='inline-block mr-2' />
-            {property.square_feet}{' '}
-            <span className='md:hidden lg:inline'>sqft</span>
-          </p>
+    return (
+        <div className='bg-white rounded-xl shadow-md relative flex flex-col lg:flex-row'>
+            <div className='relative w-full lg:w-[260px] h-[260px]'>
+                <Link href={`/properties/${property._id}`}>
+                    <FeaturedPropertyCardPlaceholder
+                        src={cloudinaryImage}
+                        alt={property.name}
+                    />
+                </Link>
+
+                <div className='absolute top-2 right-2 lg:left-2 lg:right-auto bg-blue-500 text-white px-2 py-1 rounded-lg font-bold text-sm'>
+                    {getRateDisplay()}
+                </div>
+            </div>
+            <div className='flex-grow p-4 flex flex-col justify-between'>
+                <div>
+                    <div className='mb-4 lg:mb-6'>
+                        <div className='inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full font-semibold mb-2'>
+                            {property.type}
+                        </div>
+                        <h3 className='text-xl font-bold'>{property.name}</h3>
+                    </div>
+
+                    <div className='flex flex-col items-center gap-4 mb-4'>
+                        <div className='flex justify-center items-center gap-4 sm:gap-6 text-gray-500'>
+                            <p className='flex items-center'>
+                                <Bed className='mr-1 h-5 w-5' /> {property.beds}
+                                <span className='ml-1'>Beds</span>
+                            </p>
+                            <p className='flex items-center'>
+                                <Bath className='mr-1 h-5 w-5' />{' '}
+                                {property.baths}
+                                <span className='ml-1'>Baths</span>
+                            </p>
+                            <p className='flex items-center'>
+                                <Ruler className='mr-1 h-5 w-5' />{' '}
+                                {property.square_feet}
+                                <span className='ml-1'>sqft</span>
+                            </p>
+                        </div>
+                        <div className='flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-green-600'>
+                            {property.rates.nightly && (
+                                <p className='flex items-center'>
+                                    <DollarSign className='mr-1 h-5 w-5' />{' '}
+                                    Nightly
+                                </p>
+                            )}
+                            {property.rates.weekly && (
+                                <p className='flex items-center'>
+                                    <DollarSign className='mr-1 h-5 w-5' />{' '}
+                                    Weekly
+                                </p>
+                            )}
+                            {property.rates.monthly && (
+                                <p className='flex items-center'>
+                                    <DollarSign className='mr-1 h-5 w-5' />{' '}
+                                    Monthly
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div className='border-t border-gray-200 mb-4'></div>
+
+                    <div className='flex flex-col sm:flex-row justify-between items-center'>
+                        <div className='flex items-center mb-4 sm:mb-0'>
+                            <MapPin className='text-orange-700 mr-2 h-5 w-5' />
+                            <span className='text-orange-700'>
+                                {property.location.city},{' '}
+                                {property.location.state}
+                            </span>
+                        </div>
+                        <Link
+                            href={`/properties/${property._id}`}
+                            className='w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm transition duration-300'
+                        >
+                            View Details
+                        </Link>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div className='flex justify-center gap-4 text-green-900 text-sm mb-4'>
-          {property.rates.nightly && (
-            <p>
-              <FaMoneyBill className='inline mr-2' /> Nightly
-            </p>
-          )}
-
-          {property.rates.weekly && (
-            <p>
-              <FaMoneyBill className='inline mr-2' /> Weekly
-            </p>
-          )}
-
-          {property.rates.monthly && (
-            <p>
-              <FaMoneyBill className='inline mr-2' /> Monthly
-            </p>
-          )}
-        </div>
-
-        <div className='border border-gray-200 mb-5'></div>
-
-        <div className='flex flex-col lg:flex-row justify-between'>
-          <div className='flex align-middle gap-2 mb-4 lg:mb-0'>
-            <FaMapMarker className='text-lg text-orange-700' />
-            <span className='text-orange-700'>
-              {' '}
-              {property.location.city} {property.location.state}
-            </span>
-          </div>
-          <Link
-            href={`/properties/${property._id}`}
-            className='h-[36px] bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center text-sm'
-          >
-            Details
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
+
 export default FeaturedPropertyCard;

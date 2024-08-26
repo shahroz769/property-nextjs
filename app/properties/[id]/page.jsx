@@ -8,7 +8,7 @@ import ShareButtons from '@/components/ShareButtons';
 import PropertyContactForm from '@/components/PropertyContactForm';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
-import { FaArrowLeft } from 'react-icons/fa';
+import { ArrowLeft } from 'lucide-react';
 
 const PropertyPage = async ({ params }) => {
     const PUBLIC_DOMAIN = process.env.VERCEL_URL
@@ -36,7 +36,7 @@ const PropertyPage = async ({ params }) => {
                         href='/properties'
                         className='text-blue-500 hover:text-blue-600 flex items-center'
                     >
-                        <FaArrowLeft className='mr-2' /> Back to Properties
+                        <ArrowLeft className='mr-2' /> Back to Properties
                     </Link>
                 </div>
             </section>
@@ -44,14 +44,12 @@ const PropertyPage = async ({ params }) => {
                 <div className='container m-auto py-10 px-6'>
                     <div className='grid grid-cols-1 md:grid-cols-70/30 w-full gap-6'>
                         <PropertyDetails property={property} />
-
-                        {/* <!-- Sidebar --> */}
                         <aside className='space-y-4'>
-                            <BookmarkButton property={property} />
                             <ShareButtons
                                 property={property}
                                 PUBLIC_DOMAIN={PUBLIC_DOMAIN}
                             />
+                            <BookmarkButton property={property} />
                             <PropertyContactForm property={property} />
                         </aside>
                     </div>
