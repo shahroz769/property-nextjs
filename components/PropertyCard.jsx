@@ -1,4 +1,4 @@
-import PropertyCardPlaceholder from './PropertyCardPlaceholder';
+import PropertyCardBlurPlaceholder from '@/components/PropertyCardBlurPlaceholder';
 import Link from 'next/link';
 import { Bed, Bath, Ruler, DollarSign, MapPin } from 'lucide-react';
 
@@ -21,8 +21,11 @@ const PropertyCard = ({ property, index = 3, home }) => {
         shouldPrioritize = index < 6;
     }
 
+    // Access image URL and thumbhash
+    const { url: cloudinaryImage, thumbhash } = property.images[0];
+
     // Use Cloudinary image URL with transformations
-    const cloudinaryImage = property.images[0].replace(
+    const transformedImage = cloudinaryImage.replace(
         'upload/',
         'upload/f_avif,w_496,h_300,c_fill/'
     );
@@ -31,9 +34,10 @@ const PropertyCard = ({ property, index = 3, home }) => {
         <div className='rounded-xl shadow-md relative bg-white'>
             <div className='relative w-full h-[300px]'>
                 <Link href={`/properties/${property._id}`}>
-                    <PropertyCardPlaceholder
-                        src={cloudinaryImage}
+                    <PropertyCardBlurPlaceholder
+                        src={transformedImage}
                         alt={property.name}
+                        thumbhash={thumbhash}
                         priority={shouldPrioritize}
                     />
                 </Link>

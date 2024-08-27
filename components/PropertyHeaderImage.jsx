@@ -1,6 +1,6 @@
-import PropertyHeaderImagePlaceholder from '@/components/PropertyHeaderImagePlaceholder';
+import PropertyHeaderImageBlurPlaceholder from '@/components/PropertyHeaderImageBlurPlaceholder';
 
-const PropertyHeaderImage = ({ image }) => {
+const PropertyHeaderImage = ({ image, thumbhash }) => {
     // Use Cloudinary image URL with transformations
     const cloudinaryImage = image.replace(
         'upload/',
@@ -11,7 +11,10 @@ const PropertyHeaderImage = ({ image }) => {
         <section>
             <div className='container-xl m-auto'>
                 <div className='grid grid-cols-1'>
-                    <PropertyHeaderImagePlaceholder src={cloudinaryImage} />
+                    <PropertyHeaderImageBlurPlaceholder
+                        src={cloudinaryImage}
+                        thumbhash={thumbhash}
+                    />
                 </div>
             </div>
         </section>

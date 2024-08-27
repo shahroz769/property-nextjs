@@ -29,7 +29,10 @@ const PropertyPage = async ({ params }) => {
 
     return (
         <>
-            <PropertyHeaderImage image={property.images[0]} />
+            <PropertyHeaderImage
+                image={property.images[0].url}
+                thumbhash={property.images[0].thumbhash}
+            />
             <section>
                 <div className='container m-auto py-6 px-6'>
                     <Link

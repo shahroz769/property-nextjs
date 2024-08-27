@@ -1,4 +1,4 @@
-import FeaturedPropertyCardPlaceholder from '@/components/FeaturedPropertyCardPlaceholder';
+import FeaturedPropertyCardBlurPlaceholder from '@/components/FeaturedPropertyCardBlurPlaceholder';
 import Link from 'next/link';
 import { Bed, Bath, Ruler, DollarSign, MapPin } from 'lucide-react';
 
@@ -14,19 +14,23 @@ const FeaturedPropertyCard = ({ property }) => {
         }
     };
 
+    // Access image URL and thumbhash
+    const { url: cloudinaryImage, thumbhash } = property.images[0];
+
     // Use Cloudinary image URL with transformations
-    const cloudinaryImage = property.images[0].replace(
+    const transformedImage = cloudinaryImage.replace(
         'upload/',
-        'upload/f_avif,w_484,h_260,c_fill/'
+        'upload/f_avif,w_496,h_300,c_fill/'
     );
 
     return (
         <div className='bg-white rounded-xl shadow-md relative flex flex-col lg:flex-row'>
             <div className='relative w-full lg:w-[260px] h-[260px]'>
                 <Link href={`/properties/${property._id}`}>
-                    <FeaturedPropertyCardPlaceholder
-                        src={cloudinaryImage}
+                    <FeaturedPropertyCardBlurPlaceholder
+                        src={transformedImage}
                         alt={property.name}
+                        thumbhash={thumbhash}
                     />
                 </Link>
 

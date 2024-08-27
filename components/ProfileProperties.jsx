@@ -1,5 +1,5 @@
 'use client';
-import ProfilePropertiesPlaceholder from '@/components/ProfilePropertiesPlaceholder';
+import ProfilePropertiesBlurPlaceholder from '@/components/ProfilePropertiesBlurPlaceholder';
 import { useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
@@ -31,10 +31,15 @@ const ProfileProperties = ({ properties: initialProperties }) => {
     return (
         <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
             {properties.map((property, index) => {
-                // Apply Cloudinary transformation to the first image
-                const transformedImage = property.images[0].replace(
+                let shouldPrioritize = index < 6;
+
+                // Access image URL and thumbhash
+                const { url: cloudinaryImage, thumbhash } = property.images[0];
+
+                // Use Cloudinary image URL with transformations
+                const transformedImage = cloudinaryImage.replace(
                     'upload/',
-                    'upload/f_avif,w_347,h_192,c_fill/'
+                    'upload/f_avif,w_496,h_300,c_fill/'
                 );
 
                 return (
@@ -43,9 +48,11 @@ const ProfileProperties = ({ properties: initialProperties }) => {
                         className='bg-white rounded-lg shadow-md overflow-hidden'
                     >
                         <Link href={`/properties/${property._id}`}>
-                            <ProfilePropertiesPlaceholder
+                            <ProfilePropertiesBlurPlaceholder
                                 src={transformedImage}
                                 alt={property.name}
+                                priority={shouldPrioritize}
+                                thumbhash={thumbhash}
                             />
                         </Link>
                         <div className='p-4'>
