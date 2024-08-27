@@ -3,14 +3,14 @@ import InfoBoxes from '@/components/InfoBoxes';
 import HomeProperties from '@/components/HomeProperties';
 import FeaturedProperties from '@/components/FeaturedProperties';
 
-const HomePage = () => {
-  return (
-    <>
-      <Hero />
-      <InfoBoxes />
-      <FeaturedProperties />
-      <HomeProperties />
-    </>
-  );
+const HomePage = async () => {
+    return (
+        <>
+            <Hero />
+            <InfoBoxes />
+            <FeaturedProperties />
+            <HomeProperties />
+        </>
+    );
 };
 export default HomePage;
