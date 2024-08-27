@@ -1,5 +1,5 @@
 import { Bed, Bath, Ruler, X, Check, MapPin } from 'lucide-react';
-import PropertyMap from '@/components/PropertyMap';
+// import PropertyMap from '@/components/PropertyMap';
 
 const PropertyDetails = ({ property }) => {
     return (
@@ -92,9 +92,9 @@ const PropertyDetails = ({ property }) => {
                     ))}
                 </ul>
             </div>
-            <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
-                {/* <PropertyMap property={property} /> */}
-            </div>
+            {/* <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+                <PropertyMap property={property} />
+            </div> */}
         </main>
     );
 };
