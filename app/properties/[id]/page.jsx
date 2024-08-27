@@ -1,11 +1,11 @@
 import PropertyHeaderImage from '@/components/PropertyHeaderImage';
 import PropertyDetails from '@/components/PropertyDetails';
-import connectDB from '@/config/database';
-import Property from '@/models/Property';
 import PropertyImages from '@/components/PropertyImages';
 import BookmarkButton from '@/components/BookmarkButton';
 import ShareButtons from '@/components/ShareButtons';
 import PropertyContactForm from '@/components/PropertyContactForm';
+import connectDB from '@/config/database';
+import Property from '@/models/Property';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
