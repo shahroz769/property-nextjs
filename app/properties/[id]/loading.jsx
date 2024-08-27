@@ -75,9 +75,9 @@ function PropertyDetailsSkeleton() {
                 </ul>
             </div>
 
-            <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
+            {/* <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
                 <Skeleton className='bg-gray-200 w-full h-[500px]' />
-            </div>
+            </div> */}
         </main>
     );
 }
