@@ -70,7 +70,7 @@ function FeaturedPropertiesSkeleton() {
 function FeaturedPropertyCardSkeleton() {
     return (
         <div className='bg-white rounded-xl shadow-md relative flex flex-col lg:flex-row'>
-            <div className='relative w-full lg:w-[260px] h-[260px]'>
+            <div className='relative w-full lg:w-[260px] min-h-[260px] max-h-max'>
                 <Skeleton className='bg-gray-200 w-full h-full rounded-xl' />
                 <Skeleton className='bg-gray-200 absolute top-2 right-2 lg:left-2 lg:right-auto w-20 h-6 rounded-lg' />
             </div>
@@ -114,7 +114,7 @@ function FeaturedPropertyCardSkeleton() {
 function HomePropertiesSkeleton() {
     return (
         <>
-            <section className='px-4 py-6'>
+            <section className='px-4 pt-6'>
                 <div className='container-xl lg:container m-auto'>
                     <Skeleton className='bg-gray-200 h-10 w-64 mx-auto mb-6' />
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
@@ -134,22 +134,26 @@ function HomePropertiesSkeleton() {
 
 function PropertyCardSkeleton() {
     return (
-        <div className='rounded-xl shadow-md bg-white'>
-            <div className='relative'>
-                <Skeleton className='bg-gray-200 w-full h-48 rounded-t-xl' />
-                <Skeleton className='bg-gray-200 absolute top-2 left-2 w-20 h-6 rounded-lg' />
-            </div>
-            <div className='p-4'>
-                <Skeleton className='bg-gray-200 w-20 h-6 rounded-full mb-2' />
-                <Skeleton className='bg-gray-200 w-3/4 h-8 mb-2' />
-                <Skeleton className='bg-gray-200 w-1/2 h-6 mb-4' />
-                <div className='flex justify-between mb-4'>
-                    {[...Array(3)].map((_, i) => (
-                        <Skeleton key={i} className='bg-gray-200 w-16 h-6' />
-                    ))}
-                </div>
-                <Skeleton className='bg-gray-200 w-full h-10 rounded-lg' />
-            </div>
+      <div className='rounded-xl shadow-md relative bg-white'>
+        <Skeleton className="bg-gray-200 w-full h-[300px] rounded-t-xl" />
+        <div className='p-4'>
+          <Skeleton className="bg-gray-200 w-20 h-6 mb-2" />
+          <Skeleton className="bg-gray-200 w-3/4 h-6 mb-4" />
+          <div className='flex justify-center items-center gap-6 mb-4'>
+            <Skeleton className="bg-gray-200 w-16 h-6" />
+            <Skeleton className="bg-gray-200 w-16 h-6" />
+            <Skeleton className="bg-gray-200 w-16 h-6" />
+          </div>
+          <div className='flex justify-center items-center gap-6 mb-4'>
+            <Skeleton className="bg-gray-200 w-20 h-6" />
+            <Skeleton className="bg-gray-200 w-20 h-6" />
+          </div>
+          <Skeleton className="bg-gray-200 w-full h-[1px] my-4" />
+          <div className='flex flex-col sm:flex-row justify-between items-center'>
+            <Skeleton className="bg-gray-200 w-32 h-6 mb-4 sm:mb-0" />
+            <Skeleton className="bg-gray-200 w-full sm:w-32 h-10 rounded-lg" />
+          </div>
         </div>
-    );
-}
+      </div>
+    )
+  }

@@ -25,7 +25,7 @@ const FeaturedPropertyCard = ({ property }) => {
 
     return (
         <div className='bg-white rounded-xl shadow-md relative flex flex-col lg:flex-row'>
-            <div className='relative w-full lg:w-[260px] h-[260px]'>
+            <div className='relative w-full lg:w-[260px] min-h-[260px] max-h-max'>
                 <Link href={`/properties/${property._id}`}>
                     <FeaturedPropertyCardBlurPlaceholder
                         src={transformedImage}
