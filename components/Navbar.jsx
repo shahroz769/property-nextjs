@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -12,7 +12,6 @@ import UnreadMessageCount from '@/components/UnreadMessageCount';
 
 const Navbar = () => {
     const { data: session, status } = useSession();
-    const profileImage = session?.user?.image;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [providers, setProviders] = useState(null);
@@ -20,33 +19,38 @@ const Navbar = () => {
     const pathname = usePathname();
     const router = useRouter();
     const profileMenuRef = useRef(null);
+    const isLoading = status === 'loading' || isLoadingProviders;
+
+    const handleClickOutside = useCallback((event) => {
+        if (
+            profileMenuRef.current &&
+            !profileMenuRef.current.contains(event.target)
+        ) {
+            setIsProfileMenuOpen(false);
+        }
+    }, []);
 
     useEffect(() => {
         const setAuthProviders = async () => {
-            setIsLoadingProviders(true);
-            const res = await getProviders();
-            setProviders(res);
-            setIsLoadingProviders(false);
-        };
-        setAuthProviders();
-        window.addEventListener('resize', () => setIsMobileMenuOpen(false));
-
-        const handleClickOutside = (event) => {
-            if (
-                profileMenuRef.current &&
-                !profileMenuRef.current.contains(event.target)
-            ) {
-                setIsProfileMenuOpen(false);
+            if (!providers) {
+                // Avoid fetching providers again if they are already fetched
+                setIsLoadingProviders(true);
+                const res = await getProviders();
+                setProviders(res);
+                setIsLoadingProviders(false);
             }
         };
+        setAuthProviders();
 
+        const handleResize = () => setIsMobileMenuOpen(false);
+        window.addEventListener('resize', handleResize);
         document.addEventListener('mousedown', handleClickOutside);
+
         return () => {
+            window.removeEventListener('resize', handleResize);
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
-
-    const isLoading = status === 'loading' || isLoadingProviders;
+    }, [providers, handleClickOutside]);
 
     const handleMenuItemClick = (href) => {
         setIsProfileMenuOpen(false);
@@ -145,7 +149,10 @@ const Navbar = () => {
                                     >
                                         <Image
                                             className='h-8 w-8 rounded-full'
-                                            src={profileImage || profileDefault}
+                                            src={
+                                                session?.user?.image ||
+                                                profileDefault
+                                            }
                                             alt='Profile'
                                             width={32}
                                             height={32}
