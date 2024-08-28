@@ -22,7 +22,7 @@ const PropertyImages = ({ images }) => {
     return (
         <Gallery>
             <section className='bg-blue-50 pb-10'>
-                <div className='container mx-auto'>
+                <div className='container px-6 mx-auto'>
                     {cloudinaryImages.length === 1 ? (
                         <Item
                             cropped
@@ -49,7 +49,7 @@ const PropertyImages = ({ images }) => {
                             )}
                         </Item>
                     ) : (
-                        <div className='grid grid-cols-2 gap-4'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                             {cloudinaryImages.map((image, index) => (
                                 <div
                                     key={index}

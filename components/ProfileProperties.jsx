@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import deleteProperty from '@/app/actions/deleteProperty';

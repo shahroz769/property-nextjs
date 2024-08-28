@@ -14,10 +14,8 @@ const FeaturedPropertyCard = ({ property }) => {
         }
     };
 
-    // Access image URL and thumbhash
     const { url: cloudinaryImage, thumbhash } = property.images[0];
 
-    // Use Cloudinary image URL with transformations
     const transformedImage = cloudinaryImage.replace(
         'upload/',
         'upload/f_avif,w_496,h_300,c_fill/'

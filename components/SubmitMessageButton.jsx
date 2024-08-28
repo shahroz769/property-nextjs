@@ -1,5 +1,5 @@
 import { useFormStatus } from 'react-dom';
-import { MessageCircle  } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
 const SubmitMessageButton = () => {
     const { pending } = useFormStatus();
@@ -9,7 +9,7 @@ const SubmitMessageButton = () => {
             type='submit'
             disabled={pending}
         >
-            <MessageCircle  className='mr-2' />{' '}
+            <MessageCircle className='mr-2' />{' '}
             {pending ? 'Sending...' : 'Send Message'}
         </button>
     );

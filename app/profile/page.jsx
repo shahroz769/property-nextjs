@@ -2,9 +2,9 @@ import Image from 'next/image';
 import connectDB from '@/config/database';
 import Property from '@/models/Property';
 import { getSessionUser } from '@/utils/getSessionUser';
-import profileDefault from '@/assets/images/profile.png';
-import ProfileProperties from '@/components/ProfileProperties';
 import { convertToSerializeableObject } from '@/utils/convertToObject';
+import ProfileProperties from '@/components/ProfileProperties';
+import profileDefault from '@/assets/images/profile.png';
 
 const ProfilePage = async () => {
     await connectDB();
