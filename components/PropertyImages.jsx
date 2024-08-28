@@ -6,26 +6,26 @@ import { Gallery, Item } from 'react-photoswipe-gallery';
 const PropertyImages = ({ images }) => {
     // Map through the images array to apply Cloudinary transformations and generate blur placeholders
     const cloudinaryImages = images.map((image) => {
-        // Ensure image is an object and has 'url' and 'thumbhash' keys
         if (typeof image === 'object' && image.url && image.thumbhash) {
             return {
                 ...image,
                 url: image.url.replace(
                     'upload/',
                     'upload/f_avif,h_1000,c_fill/'
-                ), // Apply Cloudinary transformation
-                blurDataURL: createPngDataUri(image.thumbhash), // Generate blur placeholder
+                ),
+                blurDataURL: createPngDataUri(image.thumbhash),
             };
         }
-        return image; // Return the image as-is if it doesn't have 'url' and 'thumbhash' keys
+        return image;
     });
 
     return (
         <Gallery>
-            <section className='bg-blue-50 p-4'>
+            <section className='bg-blue-50 pb-10'>
                 <div className='container mx-auto'>
                     {cloudinaryImages.length === 1 ? (
                         <Item
+                            cropped
                             original={cloudinaryImages[0].url}
                             thumbnail={cloudinaryImages[0].url}
                             width='1000'
@@ -53,15 +53,15 @@ const PropertyImages = ({ images }) => {
                             {cloudinaryImages.map((image, index) => (
                                 <div
                                     key={index}
-                                    className={`
-                  ${
-                      cloudinaryImages.length === 3 && index === 2
-                          ? 'col-span-2'
-                          : 'col-span-1'
-                  }
-                `}
+                                    className={`${
+                                        cloudinaryImages.length === 3 &&
+                                        index === 2
+                                            ? 'col-span-2'
+                                            : 'col-span-1'
+                                    }`}
                                 >
                                     <Item
+                                        cropped
                                         original={image.url}
                                         thumbnail={image.url}
                                         width='1000'

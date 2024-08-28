@@ -78,6 +78,7 @@ const Navbar = () => {
                                 className='h-10 w-auto'
                                 src={logo}
                                 alt='PropertyPulse'
+                                priority
                             />
                             <span className='hidden md:block text-white text-2xl font-bold ml-2'>
                                 PropertyPulse
@@ -190,7 +191,7 @@ const Navbar = () => {
                                         <Image
                                             className='h-8 w-8 rounded-full'
                                             src={profileImage || profileDefault}
-                                            alt=''
+                                            alt='Profile'
                                             width={40}
                                             height={40}
                                         />
