@@ -54,7 +54,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className='bg-gradient-to-r bg-blue-700 shadow-lg border-b border-blue-500'>
+        <nav className='bg-blue-700 shadow-lg border-b border-blue-500'>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
                 <div className='flex justify-between h-16'>
                     <div className='flex items-center'>
