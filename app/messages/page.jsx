@@ -14,7 +14,7 @@ const MessagePage = async () => {
     console.log(userId);
 
     const readMessages = await Message.find({ recipient: userId, read: true })
-        .sort({ createdAt: -1 }) // Sort read messages in asc order
+        .sort({ createdAt: -1 })
         .populate('sender', 'username')
         .populate('property', 'name')
         .lean();
@@ -23,12 +23,11 @@ const MessagePage = async () => {
         recipient: userId,
         read: false,
     })
-        .sort({ createdAt: -1 }) // Sort read messages in asc order
+        .sort({ createdAt: -1 })
         .populate('sender', 'username')
         .populate('property', 'name')
         .lean();
 
-    // Convert to serializable object so we can pass to client component.
     const messages = [...unreadMessages, ...readMessages].map((messageDoc) => {
         const message = convertToSerializeableObject(messageDoc);
         message.sender = convertToSerializeableObject(messageDoc.sender);
@@ -37,8 +36,8 @@ const MessagePage = async () => {
     });
 
     return (
-        <section className='bg-blue-50'>
-            <div className='container m-auto py-24 max-w-6xl'>
+        <section className='bg-blue-50 flex-grow'>
+            <div className='container mx-auto py-24 max-w-6xl'>
                 <div className='px-6 py-8 mb-4 m-4 md:m-0'>
                     <h1 className='text-3xl font-bold mb-4'>Your Messages</h1>
 
@@ -59,4 +58,5 @@ const MessagePage = async () => {
         </section>
     );
 };
+
 export default MessagePage;

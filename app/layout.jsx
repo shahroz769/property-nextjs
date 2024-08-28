@@ -25,9 +25,9 @@ const MainLayout = ({ children }) => {
         <AuthProvider>
             <GlobalProvider>
                 <html lang='en' className={poppins.className}>
-                    <body>
+                    <body className='flex flex-col min-h-screen'>
                         <Navbar />
-                        <main>{children}</main>
+                        <main className='flex-grow'>{children}</main>
                         <Footer />
                         <ToastContainer />
                     </body>
