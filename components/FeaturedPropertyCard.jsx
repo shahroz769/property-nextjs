@@ -39,7 +39,7 @@ const FeaturedPropertyCard = ({ property }) => {
             <div className='flex-grow p-4 flex flex-col justify-between'>
                 <div>
                     <div className='mb-4 lg:mb-6'>
-                        <div className='inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full font-semibold mb-2'>
+                        <div className='inline-block text-blue-600 bg-blue-100 text-xs px-2 py-1 rounded-full font-semibold mb-2'>
                             {property.type}
                         </div>
                         <h3 className='text-xl font-bold'>{property.name}</h3>
