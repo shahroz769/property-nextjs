@@ -1,310 +1,308 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FaGoogle } from 'react-icons/fa';
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
 import { signIn, signOut, useSession, getProviders } from 'next-auth/react';
-import UnreadMessageCount from './UnreadMessageCount';
+import UnreadMessageCount from '@/components/UnreadMessageCount';
 
 const Navbar = () => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const profileImage = session?.user?.image;
-
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [providers, setProviders] = useState(null);
-
+    const [isLoadingProviders, setIsLoadingProviders] = useState(true);
     const pathname = usePathname();
+    const router = useRouter();
+    const profileMenuRef = useRef(null);
 
     useEffect(() => {
         const setAuthProviders = async () => {
+            setIsLoadingProviders(true);
             const res = await getProviders();
             setProviders(res);
+            setIsLoadingProviders(false);
+        };
+        setAuthProviders();
+        window.addEventListener('resize', () => setIsMobileMenuOpen(false));
+
+        const handleClickOutside = (event) => {
+            if (
+                profileMenuRef.current &&
+                !profileMenuRef.current.contains(event.target)
+            ) {
+                setIsProfileMenuOpen(false);
+            }
         };
 
-        setAuthProviders();
-
-        // NOTE: close mobile menu if the viewport size is changed
-        window.addEventListener('resize', () => {
-            setIsMobileMenuOpen(false);
-        });
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, []);
 
+    const isLoading = status === 'loading' || isLoadingProviders;
+
+    const handleMenuItemClick = (href) => {
+        setIsProfileMenuOpen(false);
+        router.push(href);
+    };
+
     return (
-        <nav className='bg-blue-700 border-b border-blue-500'>
-            <div className='mx-auto max-w-7xl px-2 sm:px-6 lg:px-8'>
-                <div className='relative flex h-20 items-center justify-between'>
-                    <div className='absolute inset-y-0 left-0 flex items-center md:hidden'>
-                        {/* <!-- Mobile menu button--> */}
+        <nav className='bg-gradient-to-r bg-blue-700 shadow-lg border-b border-blue-500'>
+            <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+                <div className='flex justify-between h-16'>
+                    <div className='flex items-center'>
+                        <Link
+                            href='/'
+                            className='flex-shrink-0 flex items-center'
+                        >
+                            <Image
+                                className='h-8 w-auto'
+                                src={logo}
+                                alt='PropertyPulse'
+                                priority
+                            />
+                            <span className='text-white text-xl font-bold ml-2 hidden sm:block'>
+                                PropertyPulse
+                            </span>
+                        </Link>
+                        <div className='hidden md:ml-6 md:flex md:space-x-4'>
+                            <NavLink href='/' active={pathname === '/'}>
+                                Home
+                            </NavLink>
+                            <NavLink
+                                href='/properties'
+                                active={pathname === '/properties'}
+                            >
+                                Properties
+                            </NavLink>
+                            {session && (
+                                <NavLink
+                                    href='/properties/add'
+                                    active={pathname === '/properties/add'}
+                                >
+                                    Add Property
+                                </NavLink>
+                            )}
+                        </div>
+                    </div>
+                    <div className='flex items-center'>
+                        {isLoading ? (
+                            <div className='hidden md:flex items-center space-x-4'>
+                                <div className='w-24 h-8 bg-gray-300 animate-pulse rounded'></div>
+                            </div>
+                        ) : !session ? (
+                            <div className='hidden md:flex'>
+                                {providers &&
+                                    Object.values(providers).map((provider) => (
+                                        <button
+                                            key={provider.name}
+                                            onClick={() => signIn(provider.id)}
+                                            className='flex items-center text-white bg-gray-700 hover:bg-gray-600 text-sm hover:text-white rounded-md px-3 py-2 transition duration-300'
+                                        >
+                                            <FaGoogle className='mr-2' />
+                                            <span>Login</span>
+                                        </button>
+                                    ))}
+                            </div>
+                        ) : (
+                            <div className='hidden md:flex md:items-center md:space-x-4'>
+                                <Link
+                                    href='/messages'
+                                    className='text-white hover:text-blue-200 bg-gray-700 hover:bg-gray-600 rounded-full p-2 transition duration-300'
+                                >
+                                    <div className='relative'>
+                                        <svg
+                                            className='h-6 w-6'
+                                            fill='none'
+                                            viewBox='0 0 24 24'
+                                            stroke='currentColor'
+                                        >
+                                            <path
+                                                strokeLinecap='round'
+                                                strokeLinejoin='round'
+                                                strokeWidth={2}
+                                                d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
+                                            />
+                                        </svg>
+                                        <UnreadMessageCount />
+                                    </div>
+                                </Link>
+                                <div className='relative' ref={profileMenuRef}>
+                                    <button
+                                        onClick={() =>
+                                            setIsProfileMenuOpen(
+                                                !isProfileMenuOpen
+                                            )
+                                        }
+                                        className='flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-600 focus:ring-white'
+                                    >
+                                        <Image
+                                            className='h-8 w-8 rounded-full'
+                                            src={profileImage || profileDefault}
+                                            alt='Profile'
+                                            width={32}
+                                            height={32}
+                                        />
+                                    </button>
+                                    {isProfileMenuOpen && (
+                                        <div className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50'>
+                                            <button
+                                                onClick={() =>
+                                                    handleMenuItemClick(
+                                                        '/profile'
+                                                    )
+                                                }
+                                                className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                                            >
+                                                Your Profile
+                                            </button>
+                                            <div className='border-t border-gray-200'></div>
+                                            <button
+                                                onClick={() =>
+                                                    handleMenuItemClick(
+                                                        '/properties/saved'
+                                                    )
+                                                }
+                                                className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                                            >
+                                                Saved Properties
+                                            </button>
+                                            <div className='border-t border-gray-200'></div>
+                                            <button
+                                                onClick={() => {
+                                                    setIsProfileMenuOpen(false);
+                                                    signOut({
+                                                        callbackUrl: '/',
+                                                    });
+                                                }}
+                                                className='block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
+                                            >
+                                                Sign Out
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <div className='flex items-center md:hidden'>
                         <button
-                            type='button'
-                            id='mobile-dropdown-button'
-                            className='relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
-                            aria-controls='mobile-menu'
-                            aria-expanded='false'
                             onClick={() =>
                                 setIsMobileMenuOpen(!isMobileMenuOpen)
                             }
+                            className='inline-flex items-center justify-center p-2 rounded-md text-white hover:text-blue-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
                         >
-                            <span className='absolute -inset-0.5'></span>
-                            <span className='sr-only'>Open main menu</span>
                             <svg
-                                className='block h-6 w-6'
+                                className={`${
+                                    isMobileMenuOpen ? 'hidden' : 'block'
+                                } h-6 w-6`}
+                                xmlns='http://www.w3.org/2000/svg'
                                 fill='none'
                                 viewBox='0 0 24 24'
-                                strokeWidth='1.5'
                                 stroke='currentColor'
                                 aria-hidden='true'
                             >
                                 <path
                                     strokeLinecap='round'
                                     strokeLinejoin='round'
-                                    d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5'
+                                    strokeWidth='2'
+                                    d='M4 6h16M4 12h16M4 18h16'
+                                />
+                            </svg>
+                            <svg
+                                className={`${
+                                    isMobileMenuOpen ? 'block' : 'hidden'
+                                } h-6 w-6`}
+                                xmlns='http://www.w3.org/2000/svg'
+                                fill='none'
+                                viewBox='0 0 24 24'
+                                stroke='currentColor'
+                                aria-hidden='true'
+                            >
+                                <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth='2'
+                                    d='M6 18L18 6M6 6l12 12'
                                 />
                             </svg>
                         </button>
                     </div>
-
-                    <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
-                        {/* <!-- Logo --> */}
-                        <Link
-                            className='flex flex-shrink-0 items-center'
-                            href='/'
-                        >
-                            <Image
-                                className='h-10 w-auto'
-                                src={logo}
-                                alt='PropertyPulse'
-                                priority
-                            />
-                            <span className='hidden md:block text-white text-2xl font-bold ml-2'>
-                                PropertyPulse
-                            </span>
-                        </Link>
-                        {/* <!-- Desktop Menu Hidden below md screens --> */}
-                        <div className='hidden md:ml-6 md:block'>
-                            <div className='flex space-x-2'>
-                                <Link
-                                    href='/'
-                                    className={`${
-                                        pathname === '/' ? 'bg-black' : ''
-                                    } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
-                                >
-                                    Home
-                                </Link>
-                                <Link
-                                    href='/properties'
-                                    className={`${
-                                        pathname === '/properties'
-                                            ? 'bg-black'
-                                            : ''
-                                    } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
-                                >
-                                    Properties
-                                </Link>
-                                {session && (
-                                    <Link
-                                        href='/properties/add'
-                                        className={`${
-                                            pathname === '/properties/add'
-                                                ? 'bg-black'
-                                                : ''
-                                        } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
-                                    >
-                                        Add Property
-                                    </Link>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* <!-- Right Side Menu (Logged Out) --> */}
-                    {!session && (
-                        <div className='hidden md:block md:ml-6'>
-                            <div className='flex items-center'>
-                                {providers &&
-                                    Object.values(providers).map((provider) => (
-                                        <button
-                                            key={provider.name}
-                                            onClick={() => signIn(provider.id)}
-                                            className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-3'
-                                        >
-                                            <FaGoogle className='text-white mr-2' />
-                                            <span>Login or Register</span>
-                                        </button>
-                                    ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* <!-- Right Side Menu (Logged In) --> */}
-                    {session && (
-                        <div className='absolute inset-y-0 right-0 flex items-center pr-2 md:static md:inset-auto md:ml-6 md:pr-0'>
-                            <Link href='/messages' className='relative group'>
-                                <button
-                                    type='button'
-                                    className='relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'
-                                >
-                                    <span className='absolute -inset-1.5'></span>
-                                    <span className='sr-only'>
-                                        View notifications
-                                    </span>
-                                    <svg
-                                        className='h-6 w-6'
-                                        fill='none'
-                                        viewBox='0 0 24 24'
-                                        strokeWidth='1.5'
-                                        stroke='currentColor'
-                                        aria-hidden='true'
-                                    >
-                                        <path
-                                            strokeLinecap='round'
-                                            strokeLinejoin='round'
-                                            d='M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0'
-                                        />
-                                    </svg>
-                                </button>
-                                <UnreadMessageCount />
-                            </Link>
-                            {/* <!-- Profile dropdown button --> */}
-                            <div className='relative ml-3'>
-                                <div>
-                                    <button
-                                        type='button'
-                                        className='relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'
-                                        id='user-menu-button'
-                                        aria-expanded='false'
-                                        aria-haspopup='true'
-                                        onClick={() =>
-                                            setIsProfileMenuOpen(
-                                                (prev) => !prev
-                                            )
-                                        }
-                                    >
-                                        <span className='absolute -inset-1.5'></span>
-                                        <span className='sr-only'>
-                                            Open user menu
-                                        </span>
-                                        <Image
-                                            className='h-8 w-8 rounded-full'
-                                            src={profileImage || profileDefault}
-                                            alt='Profile'
-                                            width={40}
-                                            height={40}
-                                        />
-                                    </button>
-                                </div>
-
-                                {/* <!-- Profile dropdown --> */}
-                                {isProfileMenuOpen && (
-                                    <div
-                                        id='user-menu'
-                                        className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
-                                        role='menu'
-                                        aria-orientation='vertical'
-                                        aria-labelledby='user-menu-button'
-                                        tabIndex='-1'
-                                    >
-                                        <Link
-                                            href='/profile'
-                                            className='block px-4 py-2 text-sm text-gray-700'
-                                            role='menuitem'
-                                            tabIndex='-1'
-                                            id='user-menu-item-0'
-                                            onClick={() => {
-                                                setIsProfileMenuOpen(false);
-                                            }}
-                                        >
-                                            Your Profile
-                                        </Link>
-                                        <Link
-                                            href='/properties/saved'
-                                            className='block px-4 py-2 text-sm text-gray-700'
-                                            role='menuitem'
-                                            tabIndex='-1'
-                                            id='user-menu-item-2'
-                                            onClick={() => {
-                                                setIsProfileMenuOpen(false);
-                                            }}
-                                        >
-                                            Saved Properties
-                                        </Link>
-                                        <button
-                                            onClick={() => {
-                                                setIsProfileMenuOpen(false);
-                                                signOut({ callbackUrl: '/' });
-                                            }}
-                                            className='block px-4 py-2 text-sm text-gray-700'
-                                            role='menuitem'
-                                            tabIndex='-1'
-                                            id='user-menu-item-2'
-                                        >
-                                            Sign Out
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
-            {/* <!-- Mobile menu, show/hide based on menu state. --> */}
             {isMobileMenuOpen && (
-                <div id='mobile-menu'>
-                    <div className='space-y-1 px-2 pb-3 pt-2'>
-                        <Link
-                            href='/'
-                            className={`${
-                                pathname === '/' ? 'bg-black' : ''
-                            } text-white block rounded-md px-3 py-2 text-base font-medium`}
-                        >
+                <div className='md:hidden'>
+                    <div className='px-2 pt-2 pb-3 space-y-1 sm:px-3'>
+                        <NavLink href='/' active={pathname === '/'} mobile>
                             Home
-                        </Link>
-                        <Link
+                        </NavLink>
+                        <NavLink
                             href='/properties'
-                            className={`${
-                                pathname === '/properties' ? 'bg-black' : ''
-                            } text-white block rounded-md px-3 py-2 text-base font-medium`}
+                            active={pathname === '/properties'}
+                            mobile
                         >
                             Properties
-                        </Link>
-                        {session && (
-                            <Link
-                                href='/properties/add'
-                                className={`${
-                                    pathname === '/properties/add'
-                                        ? 'bg-black'
-                                        : ''
-                                } text-white block rounded-md px-3 py-2 text-base font-medium`}
-                            >
-                                Add Property
-                            </Link>
-                        )}
-                        {!session && (
-                            <div className='block md:ml-6'>
-                                <div className='flex items-center'>
-                                    {providers &&
-                                        Object.values(providers).map(
-                                            (provider) => (
-                                                <button
-                                                    key={provider.name}
-                                                    onClick={() =>
-                                                        signIn(provider.id)
-                                                    }
-                                                    className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-3'
-                                                >
-                                                    <FaGoogle className='text-white mr-2' />
-                                                    <span>
-                                                        Login or Register
-                                                    </span>
-                                                </button>
-                                            )
-                                        )}
-                                </div>
-                            </div>
+                        </NavLink>
+                        {isLoading ? (
+                            <div className='w-full h-8 bg-gray-300 animate-pulse rounded'></div>
+                        ) : session ? (
+                            <>
+                                <NavLink
+                                    href='/properties/add'
+                                    active={pathname === '/properties/add'}
+                                    mobile
+                                >
+                                    Add Property
+                                </NavLink>
+                                <NavLink
+                                    href='/profile'
+                                    active={pathname === '/profile'}
+                                    mobile
+                                >
+                                    Profile
+                                </NavLink>
+                                <NavLink
+                                    href='/messages'
+                                    active={pathname === '/messages'}
+                                    mobile
+                                >
+                                    Messages
+                                    <UnreadMessageCount mobile={true} />
+                                </NavLink>
+                                <NavLink
+                                    href='/properties/saved'
+                                    active={pathname === '/properties/saved'}
+                                    mobile
+                                >
+                                    Saved Properties
+                                </NavLink>
+                                <button
+                                    onClick={() =>
+                                        signOut({ callbackUrl: '/' })
+                                    }
+                                    className='w-full text-left block text-white hover:bg-blue-600 px-3 py-2 rounded-md text-sm font-medium transition duration-300'
+                                >
+                                    Sign Out
+                                </button>
+                            </>
+                        ) : (
+                            providers &&
+                            Object.values(providers).map((provider) => (
+                                <button
+                                    key={provider.name}
+                                    onClick={() => signIn(provider.id)}
+                                    className='w-full text-sm text-left block text-white hover:bg-blue-600 px-3 py-2 rounded-md font-medium'
+                                >
+                                    Login
+                                </button>
+                            ))
                         )}
                     </div>
                 </div>
@@ -312,5 +310,22 @@ const Navbar = () => {
         </nav>
     );
 };
+
+const NavLink = ({ href, children, active, mobile }) => (
+    <Link
+        href={href}
+        className={`
+      ${
+          active
+              ? 'bg-gray-700 text-white hover:bg-gray-600'
+              : 'text-white hover:bg-blue-600'
+      }
+      ${mobile ? 'block' : 'inline-flex items-center'}
+      px-3 py-2 rounded-md text-sm font-medium transition duration-300
+    `}
+    >
+        {children}
+    </Link>
+);
 
 export default Navbar;

@@ -46,7 +46,7 @@ const PropertyCard = ({ property, index = 3, home }) => {
             </div>
             <div className='p-4'>
                 <div className='mb-4'>
-                    <div className='inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full font-semibold mb-2'>
+                    <div className='inline-block text-blue-600 bg-blue-100 text-xs px-2 py-1 rounded-full font-semibold mb-2'>
                         {property.type}
                     </div>
                     <h3 className='text-xl font-bold'>{property.name}</h3>
