@@ -56,7 +56,7 @@ const PropertyImages = ({ images }) => {
                                     className={`${
                                         cloudinaryImages.length === 3 &&
                                         index === 2
-                                            ? 'col-span-2'
+                                            ? 'sm:col-span-2'
                                             : 'col-span-1'
                                     }`}
                                 >
