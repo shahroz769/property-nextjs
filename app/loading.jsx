@@ -16,8 +16,8 @@ function HeroSkeleton() {
         <section className='bg-blue-700 py-20 mb-4'>
             <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center'>
                 <div className='text-center w-full md:w-3/5 md:pr-2 mb-1 md:mb-0'>
-                    <Skeleton className='bg-gray-200 h-12 w-3/4 mx-auto mb-6 md:mb-8' />
-                    <Skeleton className='bg-gray-200 h-6 w-1/2 mx-auto mb-2 md:mb-4' />
+                    <Skeleton className='bg-gray-200 h-12 w-3/4 mx-auto mb-6 md:mb-6' />
+                    <Skeleton className='bg-gray-200 h-6 w-1/2 mx-auto mb-2 md:mb-3' />
                 </div>
                 <div className='mt-3 mx-auto max-w-2xl w-full flex flex-col md:flex-row items-center'>
                     <div className='w-full md:w-3/5 md:pr-2 mb-4 md:mb-0'>
@@ -37,7 +37,7 @@ function InfoBoxesSkeleton() {
     return (
         <section>
             <div className='container-xl lg:container m-auto'>
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-lg mb-4'>
                     {[...Array(2)].map((_, index) => (
                         <div key={index} className='p-6 rounded-lg bg-gray-100'>
                             <Skeleton className='bg-gray-200 h-8 w-1/2 mb-4' />

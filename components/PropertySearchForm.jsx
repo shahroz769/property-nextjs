@@ -44,7 +44,7 @@ export default function PropertySearchForm() {
     return (
         <form
             onSubmit={handleSubmit}
-            className='mt-3 mx-auto max-w-2xl w-full flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4'
+            className='mx-auto max-w-2xl w-full flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4'
             autoComplete='off'
         >
             <div className='w-full md:w-3/5'>
