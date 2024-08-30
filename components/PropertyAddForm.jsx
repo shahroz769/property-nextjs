@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Upload } from 'lucide-react';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import addProperty from '@/app/actions/addProperty';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -377,7 +378,10 @@ export default function PropertyAddForm() {
                 type='submit'
                 disabled={isSaving}
             >
-                {isSaving ? 'Adding Property...' : 'Add Property'}
+                {isSaving && (
+                    <ReloadIcon className='mr-2 h-4 w-4 animate-spin' />
+                )}
+                {isSaving ? 'Adding Property' : 'Add Property'}
             </Button>
         </form>
     );

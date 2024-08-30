@@ -3,8 +3,10 @@ import connectDB from '@/config/database';
 import User from '@/models/User';
 import { getSessionUser } from '@/utils/getSessionUser';
 
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 const SavedPropertiesPage = async () => {
   await connectDB();
+  await delay(5000);
 
   const sessionUser = await getSessionUser();
 
