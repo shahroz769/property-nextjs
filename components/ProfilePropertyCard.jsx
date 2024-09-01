@@ -11,7 +11,7 @@ import {
 import PropertyCardBlurPlaceholder from '@/components/PropertyCardBlurPlaceholder';
 
 export default function Component({ property, onDelete, index }) {
-    const shouldPrioritize = index < 6;
+    const shouldPrioritize = index < 3;
 
     const { url: cloudinaryImage, thumbhash } = property.images[0];
     const transformedImage = cloudinaryImage.replace(

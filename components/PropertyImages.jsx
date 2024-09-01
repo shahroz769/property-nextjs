@@ -46,7 +46,7 @@ const PropertyImages = ({ images }) => {
                                     ref={ref}
                                     onClick={open}
                                     src={cloudinaryImages[0].thumbnailUrl}
-                                    alt=''
+                                    alt='Property'
                                     className='object-cover h-[400px] cursor-pointer mx-auto rounded-xl hover:opacity-75 transition duration-300 ease-in-out'
                                     width={1800}
                                     height={400}
@@ -82,11 +82,10 @@ const PropertyImages = ({ images }) => {
                                                 ref={ref}
                                                 onClick={open}
                                                 src={image.thumbnailUrl}
-                                                alt=''
+                                                alt='Property'
                                                 className='object-cover h-[400px] w-full rounded-xl cursor-pointer hover:opacity-75 transition duration-300 ease-in-out'
                                                 width={0}
                                                 height={0}
-                                                sizes='100vw'
                                                 unoptimized
                                                 placeholder='blur'
                                                 blurDataURL={image.blurDataURL}

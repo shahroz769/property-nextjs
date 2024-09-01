@@ -8,7 +8,6 @@ const PropertyHeaderImageBlurPlaceholder = ({ src, thumbhash }) => {
             alt='Property Banner'
             width={0}
             height={0}
-            sizes='100vw'
             className='object-cover h-[400px] w-full'
             priority
             unoptimized

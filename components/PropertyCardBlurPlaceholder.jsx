@@ -8,7 +8,6 @@ const PropertyCardBlurPlaceholder = ({ src, alt, thumbhash, priority }) => {
             alt={alt}
             width={0}
             height={0}
-            sizes='100vw'
             layout='fill'
             className='object-cover rounded-t-xl hover:opacity-75 transition duration-300 ease-in-out'
             priority={priority}

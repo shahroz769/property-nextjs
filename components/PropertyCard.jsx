@@ -19,7 +19,7 @@ const PropertyCard = ({ property, index = 3, home }) => {
     if (home) {
         shouldPrioritize = false;
     } else {
-        shouldPrioritize = index < 6;
+        shouldPrioritize = index < 3;
     }
 
     const { url: cloudinaryImage, thumbhash } = property.images[0];
