@@ -8,10 +8,11 @@ const PropertyCardBlurPlaceholder = ({ src, alt, thumbhash, priority }) => {
             alt={alt}
             width={0}
             height={0}
-            sizes='(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw'
+            sizes='100vw'
             layout='fill'
             className='object-cover rounded-t-xl hover:opacity-75 transition duration-300 ease-in-out'
             priority={priority}
+            unoptimized
             placeholder='blur'
             blurDataURL={createPngDataUri(thumbhash)}
         />

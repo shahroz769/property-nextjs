@@ -11,6 +11,7 @@ const PropertyHeaderImageBlurPlaceholder = ({ src, thumbhash }) => {
             sizes='100vw'
             className='object-cover h-[400px] w-full'
             priority
+            unoptimized
             placeholder='blur'
             blurDataURL={createPngDataUri(thumbhash)}
         />
