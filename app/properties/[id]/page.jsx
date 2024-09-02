@@ -53,7 +53,9 @@ const PropertyPage = async ({ params }) => {
                                 PUBLIC_DOMAIN={PUBLIC_DOMAIN}
                             />
                             <BookmarkButton property={property} />
-                            <PropertyContactForm property={property} />
+                            <div className='sticky top-4'>
+                                <PropertyContactForm property={property} />
+                            </div>
                         </aside>
                     </div>
                 </div>
