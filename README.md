@@ -29,12 +29,8 @@ Property Pulse uses the following technologies:
 - [MongoDB](https://www.mongodb.com/)
 - [Mongoose](https://mongoosejs.com/)
 - [NextAuth.js](https://next-auth.js.org/)
-- [React Icons](https://react-icons.github.io/react-icons/)
 - [Photoswipe](https://photoswipe.com/)
 - [Cloudinary](https://cloudinary.com/)
-- [React Geocode](https://www.npmjs.com/package/react-geocode)
-- [React Spinners](https://www.npmjs.com/package/react-spinners)
-- [React Toastify](https://fkhadra.github.io/react-toastify/)
 - [React Share](https://www.npmjs.com/package/react-share)
 
 ## Getting Started
